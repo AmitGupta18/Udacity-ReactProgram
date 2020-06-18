@@ -1,13 +1,20 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, Text } from "react-native";
-import { getMetricInfo, timeToString } from "../utils/helpers";
+import {
+  getMetricInfo,
+  timeToString,
+  getDailyReminderValue,
+} from "../utils/helpers";
 import UdaciSlider from "./UdaciSlider";
 import UdaciStepper from "./UdaciStepper";
 import DateHeader from "./DateHeader";
 import { Ionicons } from "@expo/vector-icons";
 import TextButton from "./TextButton";
+import { submitEntry, removeEntry } from "../utils/api";
+import { connect } from "react-redux";
+import { addEntry } from "../actions";
 
-export default function AddEntry(props) {
+function AddEntry(props) {
   const [metrics, setState] = useState({
     run: 0,
     bike: 0,
@@ -17,7 +24,7 @@ export default function AddEntry(props) {
   });
 
   const increment = (metricName) => {
-    const [max, step] = getMetricInfo(metricName);
+    const { max, step } = getMetricInfo(metricName);
 
     const count = metrics[metricName] + step;
 
@@ -47,7 +54,11 @@ export default function AddEntry(props) {
     const key = timeToString();
     const entry = metrics;
 
-    // Update Redux
+    props.dispatch(
+      addEntry({
+        [key]: entry,
+      })
+    );
 
     setState({
       run: 0,
@@ -58,7 +69,7 @@ export default function AddEntry(props) {
     });
     // Navigate to Home
 
-    // Save to DB
+    submitEntry({ key, entry });
 
     // Clear local notifications
   };
@@ -66,9 +77,14 @@ export default function AddEntry(props) {
   const reset = () => {
     const key = timeToString();
 
-    // Update Redux
+    props.dispatch(
+      addEntry({
+        [key]: getDailyReminderValue(),
+      })
+    );
     // Navigate to home
-    // Update DB
+
+    removeEntry(key);
   };
 
   if (props.alreadyLogged) {
@@ -121,3 +137,13 @@ function SubmitBtn({ onPress }) {
     </TouchableOpacity>
   );
 }
+
+function mapStateToProps(state, props) {
+  const key = timeToString();
+
+  return {
+    alreadyLogged: state[key] && typeof state[key].today === "undefined",
+  };
+}
+
+export default connect(mapStateToProps)(AddEntry);
