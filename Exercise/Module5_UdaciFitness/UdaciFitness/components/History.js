@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,8 +13,12 @@ import { timeToString, getDailyReminderValue } from "../utils/helpers";
 import UdaciFitnessCalendar from "udacifitness-calendar";
 import { white } from "../utils/colors";
 import DateHeader from "./DateHeader";
+import MetricCard from "./MetricCard";
+import { AppLoading } from "expo";
 
 function History(props) {
+  const [ready, setReady] = useState(false);
+
   // Empty array as second arg will
   // make it similar to componentDidMount
   useEffect(() => {
@@ -30,7 +34,8 @@ function History(props) {
             })
           );
         }
-      });
+      })
+      .then(() => setReady(true));
   }, []);
 
   renderItem = ({ today, ...metrics }, formattedDate, key) => {
@@ -43,7 +48,7 @@ function History(props) {
           </View>
         ) : (
           <TouchableOpacity onPress={() => console.log("Pressed!")}>
-            <Text>{JSON.stringify(metrics)}</Text>
+            <MetricCard date={formattedDate} metrics={metrics} />
           </TouchableOpacity>
         )}
       </View>
@@ -62,6 +67,10 @@ function History(props) {
   };
 
   const { entries } = props;
+  if (ready === false) {
+    return <AppLoading />;
+  }
+
   return (
     <UdaciFitnessCalendar
       items={entries}
