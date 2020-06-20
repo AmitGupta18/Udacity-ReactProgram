@@ -1,6 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
-import { purple } from "../utils/colors";
 import styled from "styled-components/native";
 
 const DateHeaderText = styled.Text`
