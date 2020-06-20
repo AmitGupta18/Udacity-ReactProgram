@@ -20,6 +20,7 @@ import { submitEntry, removeEntry } from "../utils/api";
 import { connect } from "react-redux";
 import { addEntry } from "../actions";
 import { purple, white } from "../utils/colors";
+import { NavigationActions } from "react-navigation";
 
 function AddEntry(props) {
   const [metrics, setState] = useState({
@@ -75,6 +76,7 @@ function AddEntry(props) {
       eat: 0,
     });
     // Navigate to Home
+    toHome();
 
     submitEntry({ key, entry });
 
@@ -90,8 +92,17 @@ function AddEntry(props) {
       })
     );
     // Navigate to home
+    toHome();
 
     removeEntry(key);
+  };
+
+  const toHome = () => {
+    props.navigation.dispatch(
+      NavigationActions.back({
+        key: "AddEntry",
+      })
+    );
   };
 
   if (props.alreadyLogged) {

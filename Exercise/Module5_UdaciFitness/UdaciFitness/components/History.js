@@ -47,7 +47,11 @@ function History(props) {
             <Text style={styles.noDataText}>{today}</Text>
           </View>
         ) : (
-          <TouchableOpacity onPress={() => console.log("Pressed!")}>
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("EntryDetail", { entryId: key })
+            }
+          >
             <MetricCard date={formattedDate} metrics={metrics} />
           </TouchableOpacity>
         )}
