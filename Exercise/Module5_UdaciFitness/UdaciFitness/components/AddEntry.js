@@ -10,6 +10,8 @@ import {
   getMetricInfo,
   timeToString,
   getDailyReminderValue,
+  clearLocalNotification,
+  setLocalNotification,
 } from "../utils/helpers";
 import UdaciSlider from "./UdaciSlider";
 import UdaciStepper from "./UdaciStepper";
@@ -75,12 +77,12 @@ function AddEntry(props) {
       sleep: 0,
       eat: 0,
     });
-    // Navigate to Home
+
     toHome();
 
     submitEntry({ key, entry });
 
-    // Clear local notifications
+    clearLocalNotification().then(setLocalNotification);
   };
 
   const reset = () => {
