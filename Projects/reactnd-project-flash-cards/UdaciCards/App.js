@@ -11,6 +11,7 @@ import Deck from "./components/Deck";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import NewQuestion from "./components/NewQuestion";
 import Store from "./store";
+import Quiz from "./components/Quiz";
 
 const Tabs = createBottomTabNavigator(
   {
@@ -73,6 +74,15 @@ const MainNavigator = createAppContainer(
     },
     NewQuestion: {
       screen: NewQuestion,
+      navigationOptions: ({ navigation }) => ({
+        headerTintColor: white,
+        headerStyle: {
+          backgroundColor: purple,
+        },
+      }),
+    },
+    Quiz: {
+      screen: Quiz,
       navigationOptions: ({ navigation }) => ({
         headerTintColor: white,
         headerStyle: {

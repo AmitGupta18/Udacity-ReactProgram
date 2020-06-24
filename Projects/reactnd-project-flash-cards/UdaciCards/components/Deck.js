@@ -9,13 +9,6 @@ import { removeDeck } from "../utils/api";
 const Deck = (props) => {
   const [state, dispatch] = useContext(Context);
 
-  const handleStartQuiz = () => {
-    const { deckTitle } = props.navigation.state.params;
-    if (state[deckTitle] && state[deckTitle].questions.length > 0) {
-      props.navigation.navigate("NewQuestion");
-    }
-  };
-
   const deleteDeck = (title) => {
     removeDeck(title);
     dispatch({ type: REMOVE_DECK, title });
@@ -57,7 +50,7 @@ const Deck = (props) => {
             Platform.OS === "ios" ? styles.iosBtn : styles.androidBtn,
             styles.startQuizBtn,
           ]}
-          onPress={handleStartQuiz}
+          onPress={() => props.navigation.navigate("Quiz", { deckTitle })}
         >
           <Text style={[styles.btnText, { color: white }]}>Start Quiz</Text>
         </TouchableOpacity>

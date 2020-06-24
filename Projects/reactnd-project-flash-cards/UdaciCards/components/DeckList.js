@@ -5,16 +5,20 @@ import { lightGray, black, white } from "../utils/colors";
 import { fetchDecks } from "../utils/api";
 import { Context } from "../store";
 import { ADD_DECKS } from "../reducer";
+import { AppLoading } from "expo";
 
 function DeckList(props) {
   const [state, dispatch] = useContext(Context);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    fetchDecks().then((result) => {
-      if (result !== null) {
-        dispatch({ type: ADD_DECKS, decks: JSON.parse(result) });
-      }
-    });
+    fetchDecks()
+      .then((result) => {
+        if (result !== null) {
+          dispatch({ type: ADD_DECKS, decks: JSON.parse(result) });
+        }
+      })
+      .then(() => setReady(true));
   }, []);
 
   const renderItem = ({ item }) => {
@@ -40,10 +44,18 @@ function DeckList(props) {
     );
   };
 
+  if (ready === false) {
+    <AppLoading />;
+  }
+
   return (
     <View style={styles.container}>
       {Object.keys(state).length === 0 ? (
-        <Text>No Decks Available</Text>
+        <View style={styles.center}>
+          <Text style={styles.noDecksText}>
+            Sorry, there are no decks available. Please create a new deck!
+          </Text>
+        </View>
       ) : (
         <FlatList
           data={Object.keys(state)}
@@ -61,6 +73,15 @@ const styles = StyleSheet.create({
     backgroundColor: lightGray,
     paddingTop: 20,
     paddingBottom: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noDecksText: {
+    textAlign: "center",
+    fontSize: 25,
   },
   listItem: {
     flex: 1,

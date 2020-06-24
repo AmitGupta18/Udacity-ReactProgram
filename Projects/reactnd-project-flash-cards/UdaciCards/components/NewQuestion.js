@@ -10,6 +10,7 @@ import { lightGray, white, black } from "../utils/colors";
 import { Context } from "../store";
 import { TouchableOpacity, TextInput } from "react-native-gesture-handler";
 import { ADD_CARD } from "../reducer";
+import { addCard } from "../utils/api";
 
 const NewQuestion = (props) => {
   const [state, dispatch] = useContext(Context);
@@ -25,6 +26,7 @@ const NewQuestion = (props) => {
         answer,
       };
       dispatch({ type: ADD_CARD, deckTitle, question: questionObj });
+      addCard(deckTitle, questionObj);
       props.navigation.goBack();
     }
   };
@@ -80,6 +82,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: "center",
     paddingBottom: 30,
+    fontWeight: "bold",
   },
   input: {
     marginTop: 20,

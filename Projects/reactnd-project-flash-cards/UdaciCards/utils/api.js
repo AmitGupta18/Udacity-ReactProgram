@@ -18,3 +18,18 @@ export function removeDeck(title) {
     AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data));
   });
 }
+
+export function addCard(title, question) {
+  return AsyncStorage.getItem(DECK_STORAGE_KEY).then((results) => {
+    const data = JSON.parse(results);
+
+    const updatedData = {
+      ...data,
+      [title]: {
+        ...data[title],
+        questions: data[title].questions.concat([question]),
+      },
+    };
+    AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(updatedData));
+  });
+}
